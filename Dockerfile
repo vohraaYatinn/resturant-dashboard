@@ -1,29 +1,35 @@
-# Use the official Node.js image as a base image
-FROM node:16 AS build
+# Use Node.js version 20 as the base image
+FROM node:20 as build
 
 # Set the working directory in the container
 WORKDIR /app
 
-# Copy package.json and package-lock.json to the working directory
+# Copy package.json and package-lock.json files
 COPY package*.json ./
 
 # Install dependencies
 RUN npm install
 
-# Copy the rest of the application code to the container
+# Copy the rest of the application code
 COPY . .
 
-# Build the React application for production
+# Create a production build
 RUN npm run build
 
-# Use a lightweight web server to serve the build files
-FROM nginx:alpine
+# Use a new stage to serve the build
+FROM node:20
 
-# Copy the build files from the previous stage to the NGINX directory
-COPY --from=build /app/build /usr/share/nginx/html
+# Set the working directory in the container
+WORKDIR /app
 
-# Expose port 80 to the outside world
-EXPOSE 80
+# Install serve globally
+RUN npm install -g serve
 
-# Start NGINX when the container launches
-CMD ["nginx", "-g", "daemon off;"]
+# Copy the build from the previous stage
+COPY --from=build /app/build ./build
+
+# Expose port 3000
+EXPOSE 3000
+
+# Serve the build using serve
+CMD ["serve", "-s", "build", "-l", "3000"]
