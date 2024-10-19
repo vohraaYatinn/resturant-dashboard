@@ -10,36 +10,38 @@ import customerImg from "../../../images/customer/stock_user.png"
 const NotificationBlog =({classChange}) =>{
 	return(
 		<>
-			<li>
-				<div className="timeline-panel">
-					<div className="media me-2">
-						<img alt="images" width={50} src={IMAGES.Avatar} />
-					</div>
-					<div className="media-body">
-						<h6 className="mb-1">Dr sultads Send you Photo</h6>
-						<small className="d-block">29 July 2022 - 02:26 PM</small>
-					</div>
-				</div>
-			</li>
-			<li>
-				<div className="timeline-panel">
-					<div className={`media me-2 ${classChange}`}>KG</div>
-					<div className="media-body">
-						<h6 className="mb-1">Resport created successfully</h6>
-						<small className="d-block">29 July 2022 - 02:26 PM</small>
-					</div>
-				</div>
-			</li>
-			<li>
-				<div className="timeline-panel">
-					<div className={`media me-2 ${classChange}`}><i className="fa fa-home" /></div>
-					<div className="media-body">
-						<h6 className="mb-1">Reminder : Treatment Time!</h6>
-						<small className="d-block">29 July 2022 - 02:26 PM</small>
-					</div>
-				</div>
-			</li>
 		</>
+		// <>
+		// 	<li>
+		// 		<div className="timeline-panel">
+		// 			<div className="media me-2">
+		// 				<img alt="images" width={50} src={IMAGES.Avatar} />
+		// 			</div>
+		// 			<div className="media-body">
+		// 				<h6 className="mb-1">Dr sultads Send you Photo</h6>
+		// 				<small className="d-block">29 July 2022 - 02:26 PM</small>
+		// 			</div>
+		// 		</div>
+		// 	</li>
+		// 	<li>
+		// 		<div className="timeline-panel">
+		// 			<div className={`media me-2 ${classChange}`}>KG</div>
+		// 			<div className="media-body">
+		// 				<h6 className="mb-1">Resport created successfully</h6>
+		// 				<small className="d-block">29 July 2022 - 02:26 PM</small>
+		// 			</div>
+		// 		</div>
+		// 	</li>
+		// 	<li>
+		// 		<div className="timeline-panel">
+		// 			<div className={`media me-2 ${classChange}`}><i className="fa fa-home" /></div>
+		// 			<div className="media-body">
+		// 				<h6 className="mb-1">Reminder : Treatment Time!</h6>
+		// 				<small className="d-block">29 July 2022 - 02:26 PM</small>
+		// 			</div>
+		// 		</div>
+		// 	</li>
+		// </>
 	)
 }
 
@@ -103,7 +105,7 @@ const Header = ({ onNote }) => {
 						<Dropdown as="li" className="nav-item dropdown notification_dropdown">
 							<Dropdown.Toggle className="nav-link i-false c-pointer" variant="" as="a">
 								{SVGICON.BellIcon}		
-								<span className="badge light text-white bg-primary rounded-circle">18</span>				
+								{/* <span className="badge light text-white bg-primary rounded-circle">18</span>				 */}
 							</Dropdown.Toggle>
 							<Dropdown.Menu align="end" className="mt-2 dropdown-menu dropdown-menu-end">
 								<div className="widget-media dz-scroll p-3 height380">
@@ -126,7 +128,7 @@ const Header = ({ onNote }) => {
 							</Dropdown.Menu>
 						</Dropdown>	
 						
-						<Dropdown as="li" className="nav-item dropdown notification_dropdown ">
+						{/* <Dropdown as="li" className="nav-item dropdown notification_dropdown ">
 							<Dropdown.Toggle variant="" as="a" className="nav-link   i-false c-pointer" role="button">
 								{SVGICON.CalenderIcon}
 							</Dropdown.Toggle>
@@ -232,7 +234,7 @@ const Header = ({ onNote }) => {
 									</div>
 								</div>
 							</Dropdown.Menu>
-						</Dropdown>	
+						</Dropdown>	 */}
 						<li className="nav-item ps-3">
 							<Dropdown className="header-profile2">
 								<Dropdown.Toggle className="nav-link i-false" as="div">
