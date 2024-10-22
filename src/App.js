@@ -49,6 +49,7 @@ function App (props) {
     
     let routeblog = (         
       <Routes>   
+        <Route  path='*' element={<Login />} />
         <Route  path='/login' element={<Login />} />
         <Route path='/page-register' element={<SignUp />} />    
       </Routes> 

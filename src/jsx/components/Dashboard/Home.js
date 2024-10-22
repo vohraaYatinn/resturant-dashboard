@@ -59,19 +59,19 @@ const Home = () => {
     {
       title: "On Delivery",
       color: "bg-primary",
-      status: graphData?.on_delivery_percentage,
+      status: (graphData?.on_delivery_percentage)?.toFixed(2),
       iconColoe: "#3B42F0",
     },
     {
       title: "Delivered",
       color: "bg-success",
-      status: graphData?.delivered_percentage,
+      status: (graphData?.delivered_percentage)?.toFixed(2),
       iconColoe: "#4FD66E",
     },
     {
       title: "Canceled",
       color: "bg-warning",
-      status: graphData?.cancelled_percentage,
+      status: (graphData?.cancelled_percentage)?.toFixed(2),
       iconColoe: "#FF8D0E",
     },
   ];

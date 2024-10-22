@@ -9,6 +9,7 @@ export class Urls {
     static REST_AVAILABLE_FETCH = Urls.MPHRMS_API_PREFIX + 'users/is_rest_available/';
     static GET_CUSTOMERS_DATA = Urls.MPHRMS_API_PREFIX + 'users/get-customer/';
     static BAN_UNBAN_CUSTOMERS = Urls.MPHRMS_API_PREFIX + 'users/action-customer/';
+    static SINGLE_CUSTOMER = Urls.MPHRMS_API_PREFIX + 'users/single-customer-fetch/';
 
 
 

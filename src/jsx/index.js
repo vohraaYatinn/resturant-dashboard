@@ -115,7 +115,7 @@ const Markup = () => {
   //Apps
           
     { url: "chat", component: <Chat /> },
-    { url: "app-profile", component: <AppProfile /> },
+    { url: "app-profile/:customerId", component: <AppProfile /> },
     { url: "app-profile-2", component: <AppProfile2 /> },
     { url: "edit-profile", component: <EditProfile /> },
     { url: "post-details", component: <PostDetails /> }, 

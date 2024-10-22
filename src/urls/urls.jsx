@@ -55,3 +55,6 @@ export const DeleteCategory = (payload_data) => {
 export const AddMenuItem = (payload_data) => {
   return project.multiPartFormData(Urls.ADD_MENU_ITEM, payload_data);
 };
+export const SingleCustomer = (payload_data) => {
+  return project.get(Urls.SINGLE_CUSTOMER, payload_data);
+};

@@ -194,7 +194,7 @@ const Customers = () => {
                                                                     <div className="d-flex align-items-center">
                                                                         <img src={item.image ? test_url_images + item.image : customerImg} className="avatar avatar-xxs rounded" alt="" />
                                                                         <p className="mb-0 ms-2">
-                                                                            <a ><Link to={"/app-profile"}>{item.full_name}</Link></a>
+                                                                            <a ><Link to={"/app-profile/"+item.id}>{item.full_name}</Link></a>
                                                                             </p>	
                                                                     </div>
                                                                 </td>
