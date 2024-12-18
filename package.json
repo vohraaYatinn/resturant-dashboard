@@ -48,6 +48,7 @@
     "recharts": "^2.7.2",
     "redux": "^4.2.1",
     "redux-thunk": "^2.4.2",
+    "socket.io-client": "^4.8.1",
     "sweetalert": "^2.1.2",
     "sweetalert2": "^11.7.12",
     "swiper": "^10.0.4",

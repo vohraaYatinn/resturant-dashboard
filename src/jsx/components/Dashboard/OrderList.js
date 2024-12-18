@@ -1,4 +1,4 @@
-import React, { useEffect, useState, } from 'react';
+import React, { useEffect, useRef, useState, } from 'react';
 import { Link } from 'react-router-dom';
 import { Modal, Dropdown } from 'react-bootstrap';
 import Select from 'react-select';
@@ -11,6 +11,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import { formattedDate, getDataUsingStatus, getStatusBadgeClass } from '../../commonFunctions';
 import { test_url_images } from '../../../config/environment';
 
+// import { io } from "socket.io-client";
 
 
 
@@ -30,6 +31,15 @@ const notify = (message, status) => {
 }
 
 const OrderList = () => {
+
+
+
+
+
+
+
+
+
     const [orderList, setOrderList] = useState([])
     const [filter, setFiler] = useState(options[0])
     const [selectedOrder, setSelectedOrder] = useState({})
@@ -47,6 +57,54 @@ const OrderList = () => {
             setTableBlog(updateItems)
         }
     }
+
+    const buttonRef = useRef(null);
+    const [orders, setOrders] = useState([]);
+    const [socket, setSocket] = useState(null);
+    const [message, setMessage] = useState(0);
+
+
+
+    const [notify2, setNotify2] = useState(false);
+    const audio = new Audio('./notification.wav');
+        useEffect(() => {
+            if(notify2){
+                audio.play().catch(error => {
+                console.error("Error playing sound:", error);
+                });
+                setNotify2(false)
+            }
+            
+        }, [notify2]);
+
+    useEffect(() => {
+        const ws = new WebSocket('ws://180.188.226.29:8000/ws/orders/');
+        setSocket(ws);
+
+        // Handle incoming messages
+        ws.onmessage = (event) => {
+          const data = JSON.parse(event.data);
+          
+
+          setMessage(data);
+        };
+    
+        // Handle WebSocket connection close
+        ws.onclose = () => {
+          console.log('WebSocket connection closed');
+        };
+    
+        // Handle errors
+        ws.onerror = (error) => {
+          console.error('WebSocket error:', error);
+        };
+    
+        return () => {
+          ws.close();
+        };
+      }, []);
+
+
     const [unchecked, setUnChecked] = useState(true);
     const handleChecked = (id) => {
         let temp = tableBlog.map((data) => {
@@ -111,8 +169,13 @@ const OrderList = () => {
         changeOrderStatusFetch(ChangeOrderStatus({uuid:uuid, status:status}))
     }
     useEffect(() => {
+
         fetchOrderData()
-    }, [filter])
+
+    }, [filter, message])
+
+
+      
     useEffect(() => {
         if (getOrderListError?.response) {
             notify(getOrderListError?.response?.data, "error")
@@ -120,8 +183,12 @@ const OrderList = () => {
     }, [getOrderListError])
     useEffect(() => {
         if (getOrderListResponse?.result == "success") {
+            if(getOrderListResponse?.data?.length > orderList?.length ){
+                buttonRef.current.click()
+            }
             setOrderList(getOrderListResponse?.data)
             setTableBlog(getOrderListResponse?.data)
+          
             
         }
     }, [getOrderListResponse])
@@ -154,10 +221,16 @@ const OrderList = () => {
         <div className="container">
             <div className="d-flex justify-content-between mb-4 flex-wrap">
                 <ul className="revnue-tab nav nav-tabs" id="myTab" >
+                <div>
+    </div>
                     <li className='nav-item'
                         onClick={() => { OrderListData('All') }}
                     >
                         <Link to={"#"} className={`nav-link ${addActive === 'All' ? 'active' : ''}`} >All Status</Link>
+                    </li>
+                    <li>
+                  
+
                     </li>
                     <li className='nav-item'
                         onClick={() => { OrderListData('Ondelivery') }}
@@ -181,6 +254,14 @@ const OrderList = () => {
                     </li>
                 </ul>
                 <div className='d-flex align-items-center'>
+                <button className="btn btn-primary btn-lg btn-block" style={{
+                    marginRight:"2rem"
+                }}
+                ref={buttonRef} 
+                    onClick={()=>setNotify2(!notify2)}
+                >
+                  <i className="fa fa-bell-o"></i> Turn On Notification
+                </button>
                     <Select
                         options={options}
                         className="custom-react-drop-btn"
@@ -236,7 +317,7 @@ const OrderList = () => {
                                                             <td><span><Link to={`/order-details/${item.uuid}`}>#{item.uuid}</Link></span></td>
                                                             <td><span>{formattedDate(item.ordered_at)}</span></td>
                                                             <td><span>{item?.address?.street}<br /><b>{item?.address?.city}</b></span></td>
-                                                            <td><span>$ {item.total_amount}</span></td>
+                                                            <td><span>€ {item.total_amount}</span></td>
                                                             <td>
                                                                 <span className={`badge badge-rounded badge-lg badge-outline ${getStatusBadgeClass(item.status)}`}>
                                                                     {getDataUsingStatus(item.status)}

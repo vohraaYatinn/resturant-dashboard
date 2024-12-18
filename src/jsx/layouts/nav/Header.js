@@ -5,47 +5,61 @@ import { Link } from "react-router-dom";
 import LogoutPage from './Logout';
 import { IMAGES, SVGICON } from "../../constant/theme";
 import customerImg from "../../../images/customer/stock_user.png"
+import useAxios from "../../../network/useAxios";
+import { getNotificationAdmin } from "../../../urls/urls";
 
 
 const NotificationBlog =({classChange}) =>{
 	return(
 		<>
+		
+			<li>
+				<div className="timeline-panel">
+					<div className={`media me-2 ${classChange}`}>KG</div>
+					<div className="media-body">
+						<h6 className="mb-1">Resport created successfully</h6>
+						<small className="d-block">29 July 2022 - 02:26 PM</small>
+					</div>
+				</div>
+			</li>
+		
 		</>
-		// <>
-		// 	<li>
-		// 		<div className="timeline-panel">
-		// 			<div className="media me-2">
-		// 				<img alt="images" width={50} src={IMAGES.Avatar} />
-		// 			</div>
-		// 			<div className="media-body">
-		// 				<h6 className="mb-1">Dr sultads Send you Photo</h6>
-		// 				<small className="d-block">29 July 2022 - 02:26 PM</small>
-		// 			</div>
-		// 		</div>
-		// 	</li>
-		// 	<li>
-		// 		<div className="timeline-panel">
-		// 			<div className={`media me-2 ${classChange}`}>KG</div>
-		// 			<div className="media-body">
-		// 				<h6 className="mb-1">Resport created successfully</h6>
-		// 				<small className="d-block">29 July 2022 - 02:26 PM</small>
-		// 			</div>
-		// 		</div>
-		// 	</li>
-		// 	<li>
-		// 		<div className="timeline-panel">
-		// 			<div className={`media me-2 ${classChange}`}><i className="fa fa-home" /></div>
-		// 			<div className="media-body">
-		// 				<h6 className="mb-1">Reminder : Treatment Time!</h6>
-		// 				<small className="d-block">29 July 2022 - 02:26 PM</small>
-		// 			</div>
-		// 		</div>
-		// 	</li>
-		// </>
 	)
 }
 
 const Header = ({ onNote }) => {
+	const [orderList, setOrderList] = useState([])
+
+    const [
+        getOrderListResponse,
+        getOrderListError,
+        getOrderListLoading,
+        getOrderListFetch,
+    ] = useAxios();
+
+    const fetchOrderData = () => {
+        getOrderListFetch(getNotificationAdmin())
+    }
+
+    useEffect(() => {
+
+        fetchOrderData()
+
+    }, [])
+
+    useEffect(() => {
+        if (getOrderListResponse?.result == "success") {
+         
+            setOrderList(getOrderListResponse?.data)
+          
+            
+        }
+    }, [getOrderListResponse])
+
+
+
+
+
 	const [headerFix, setheaderFix] = useState(false);
 	useEffect(() => {
 		window.addEventListener("scroll", () => {
@@ -110,10 +124,16 @@ const Header = ({ onNote }) => {
 							<Dropdown.Menu align="end" className="mt-2 dropdown-menu dropdown-menu-end">
 								<div className="widget-media dz-scroll p-3 height380">
 									<ul className="timeline">
-										<NotificationBlog classChange='media-info'/>
-										<NotificationBlog classChange='media-success' />
+										{orderList?.map((item)=>{
+											return(
+												<NotificationBlog classChange='media-info'/>
+
+											)
+
+										})}
+										{/* <NotificationBlog classChange='media-success' />
 										<NotificationBlog classChange='media-danger' />
-										<NotificationBlog classChange='media-info' />
+										<NotificationBlog classChange='media-info' /> */}
 									</ul>
 									<div className="ps__rail-x" style={{ left: 0, bottom: 0 }}>
 										<div className="ps__thumb-x" tabIndex={0} style={{ left: 0, width: 0 }}/>

@@ -46,6 +46,12 @@ export const getCategoriesData = (payload_data) => {
 export const changeMenuAvailablility = (payload_data) => {
   return project.post(Urls.CHANGE_AVAILABILITY, payload_data);
 };
+export const changeBuyonegetone = (payload_data) => {
+  return project.post(Urls.CHANGE_BUY_ONE_GET_ONE, payload_data);
+};
+export const changeaddOn = (payload_data) => {
+  return project.post(Urls.CHANGE_ADD_ON, payload_data);
+};
 export const AddNewCategory = (payload_data) => {
   return project.post(Urls.ADD_CATEGORY, payload_data);
 };
@@ -57,4 +63,7 @@ export const AddMenuItem = (payload_data) => {
 };
 export const SingleCustomer = (payload_data) => {
   return project.get(Urls.SINGLE_CUSTOMER, payload_data);
+};
+export const getNotificationAdmin = (payload_data) => {
+  return project.get(Urls.NOTIFICATION_ADMIN, payload_data);
 };

@@ -6,7 +6,7 @@ import Select from 'react-select';
 // images
 import { IMAGES } from "../../../../constant/theme";
 import useAxios from "../../../../../network/useAxios";
-import { changeMenuAvailablility, getCategoriesData } from "../../../../../urls/urls";
+import { changeaddOn, changeBuyonegetone, changeMenuAvailablility, getCategoriesData } from "../../../../../urls/urls";
 import { ToastContainer, toast } from 'react-toastify';
 import { test_url_images } from "../../../../../config/environment";
 
@@ -54,6 +54,12 @@ const ProductList = () => {
       changeMenuAvailLoading,
       changeMenuAvailFetch,
   ] = useAxios();
+  const [
+      changeInProductServicesResponse,
+      changeInProductServicesError,
+      changeInProductServicesLoading,
+      changeInProductServicesFetch,
+  ] = useAxios();
   const [selectedMenu, setSelectedMenu] = useState([])
   const [oldCat, setOldCat] = useState(false)
   const fetchCustomerData = () => {
@@ -67,6 +73,18 @@ const ProductList = () => {
       id:id,
       action:action
     }))
+  }
+  const changeInBuyoneGetOne = (id) => {
+    setOldCat(activeKey)
+    setActiveKey()
+    changeInProductServicesFetch(changeBuyonegetone({
+      id:id    }))
+  }
+  const changeinAddOn = (id) => {
+    setOldCat(activeKey)
+    setActiveKey()
+    changeInProductServicesFetch(changeaddOn({
+      id:id    }))
   }
   useEffect(() => {
       fetchCustomerData()
@@ -93,6 +111,11 @@ const ProductList = () => {
           notify(changeMenuAvailError?.response?.data, "error")
       }
   }, [changeMenuAvailError])
+  useEffect(() => {
+      if (changeInProductServicesError?.response) {
+          notify(changeInProductServicesError?.response?.data, "error")
+      }
+  }, [changeInProductServicesError])
 
   useEffect(() => {
       if (changeMenuAvailResponse?.result == "success") {
@@ -100,6 +123,12 @@ const ProductList = () => {
         fetchCustomerData()
       }
   }, [changeMenuAvailResponse])
+  useEffect(() => {
+      if (changeInProductServicesResponse?.result == "success") {
+        notify(changeInProductServicesResponse?.message, "success")
+        fetchCustomerData()
+      }
+  }, [changeInProductServicesResponse])
 
   useEffect(()=>{
     if(activeKey){
@@ -198,6 +227,14 @@ return(
                             </Nav.Link>
                           </Nav.Item>
                         </Nav>
+                        <div className="mt-4">
+                         <input type="checkbox" name="buyonegetone" checked={item?.is_buy_one} onChange={()=>{changeInBuyoneGetOne(item?.id)}}/>
+                         <label for="buyonegetone" className="mx-4"> Buy one get one</label>
+                         </div>
+                        <div>
+                         <input type="checkbox" name="addon" checked={item?.side_on} onChange={()=>{changeinAddOn(item?.id)}}/>
+                         <label for="addon" className="mx-4"> Add to add on list</label>
+                         </div>
                         </div>
                       </div>
                     </div>
