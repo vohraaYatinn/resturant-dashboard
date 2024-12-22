@@ -67,3 +67,12 @@ export const SingleCustomer = (payload_data) => {
 export const getNotificationAdmin = (payload_data) => {
   return project.get(Urls.NOTIFICATION_ADMIN, payload_data);
 };
+export const changeEditMenuItems = (payload_data) => {
+  return project.multiPartFormData(Urls.EDIT_ITEMS_CHANGE, payload_data);
+};
+export const getSingleItemData = (payload_data) => {
+  return project.get(Urls.GET_SINGLE_ITEM_DETAIL, payload_data);
+};
+export const orderMarkedAttended = (payload_data) => {
+  return project.post(Urls.ORDER_MARKED_ATTENDED, payload_data);
+};

@@ -18,8 +18,11 @@ export class Urls {
     static GET_ORDERS_LIST = Urls.MPHRMS_API_PREFIX + 'orders/fetch-order/';
     static GET_SINGLE_ORDER = Urls.MPHRMS_API_PREFIX + 'orders/fetch-single-order/';
     static CHANGE_ORDER_STATUS = Urls.MPHRMS_API_PREFIX + 'orders/order-status-change/';
+    static ORDER_MARKED_ATTENDED = Urls.MPHRMS_API_PREFIX + 'orders/order-change-attended/';
 
     //menu
+    static GET_SINGLE_ITEM_DETAIL = Urls.MPHRMS_API_PREFIX + 'menu/get-single-item-detail/';
+    static EDIT_ITEMS_CHANGE = Urls.MPHRMS_API_PREFIX + 'menu/edit-items-change/';
     static GET_CATEGORY = Urls.MPHRMS_API_PREFIX + 'menu/get-category/';
     static GET_MENU = Urls.MPHRMS_API_PREFIX + 'menu/get-menu/';
     static CHANGE_AVAILABILITY = Urls.MPHRMS_API_PREFIX + 'menu/change-availability/';

@@ -97,6 +97,7 @@ import Error503 from "./pages/Error503";
 
 import { ThemeContext } from "../context/ThemeContext";
 import Login from "./pages/Login";
+import CheckoutCheck from "./components/AppsMenu/Shop/Checkout/CheckoutChange";
 
 const Markup = () => {   
   const allroutes = [
@@ -130,6 +131,7 @@ const Markup = () => {
     { url: "ecom-product-detail", component: <ProductDetail /> },
     { url: "ecom-product-order", component: <ProductOrder /> },
     { url: "ecom-checkout", component: <Checkout /> },
+    { url: "ecom-checkout/:id", component: <CheckoutCheck /> },
     { url: "ecom-invoice", component: <Invoice /> },
     { url: "ecom-customers", component: <Customers /> },
   // Chart

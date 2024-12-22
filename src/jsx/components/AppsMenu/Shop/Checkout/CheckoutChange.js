@@ -6,13 +6,16 @@ import { ToastContainer, toast } from 'react-toastify';
 // import PageTitle from "../../../../layouts/PageTitle";
 import { IMAGES } from "../../../../constant/theme";
 import useAxios from "../../../../../network/useAxios";
-import { AddMenuItem, getCategoriesData } from "../../../../../urls/urls";
+import { changeEditMenuItems, getCategoriesData, getSingleItemData } from "../../../../../urls/urls";
+import { test_url_images } from "../../../../../config/environment";
 const productListBlog = [
   { image: IMAGES.Product2, title: "Bacon Cheeseburger", price: "320" },
 ];
 
-const Checkout = () => {
+const CheckoutCheck = () => {
+  const [orderItem, setOrderItem] = useState([])
   const [orderList, setOrderList] = useState([])
+  const { id } = useParams();
 
   const notify = (message, status) => {
     if (status == "error") {
@@ -24,6 +27,19 @@ const Checkout = () => {
 
     }
 }
+const [
+  changeItemsgetOrderListResponse,
+  changeItemsgetOrderListError,
+  changeItemsgetOrderListLoading,
+  changeItemsgetOrderListFetch,
+] = useAxios();
+
+useEffect(()=>{
+  changeItemsgetOrderListFetch(getSingleItemData({
+    menuId:id
+  }))
+},[id])
+
   const [categoryInput, setCategoryInput] = useState()
   const [
     getOrderListResponse,
@@ -52,7 +68,7 @@ const fetchCustomerData = () => {
   getOrderListFetch(getCategoriesData())
 }
 const addMyMenuFunc = () => {
-  AddNewMenuFetch(AddMenuItem({...templateValue, img:selectedImage}))
+  AddNewMenuFetch(changeEditMenuItems({...templateValue, img:selectedImage, id:id}))
 }
 useEffect(() => {
   fetchCustomerData()
@@ -65,8 +81,21 @@ useEffect(() => {
 useEffect(() => {
   if (getOrderListResponse?.result == "success") {
       setOrderList(getOrderListResponse?.data)      
+
   }
 }, [getOrderListResponse])
+useEffect(() => {
+  if (changeItemsgetOrderListResponse?.result == "success") {
+    setOrderItem(changeItemsgetOrderListResponse?.data)     
+    setTemplateValue({
+      ProductName: changeItemsgetOrderListResponse?.data?.name,
+      Description:
+      changeItemsgetOrderListResponse?.data?.description,
+      Price:changeItemsgetOrderListResponse?.data?.price,
+      Category: changeItemsgetOrderListResponse?.data?.category?.name,
+    }) 
+  }
+}, [changeItemsgetOrderListResponse])
 useEffect(() => {
   if (AddNewMenuError?.response) {
       notify(AddNewMenuError?.response?.data, "error")
@@ -110,16 +139,20 @@ useEffect(() => {
                             <div className="col-md-5 col-xxl-10">
                               <div className="new-arrival-product mb-3 mb-xxl-4 mb-md-4">
                                 <div className="new-arrivals-img-contnent">
-                                  <img
-                                    className="img-fluid border-img"
-                                    src={
-                                      selectedImage
-                                        ? URL.createObjectURL(selectedImage)
-                                        : defaultImageUrl
-                                    } // Use selected image or default
-                                    style={{ width: "300px", height: "200px" }}
-                                    alt="Preview"
-                                  />
+                                  {orderItem?.image && !selectedImage ?
+                                  <img src={test_url_images+orderItem?.image}/>:  <img
+                                  className="img-fluid border-img"
+                                  src={
+                                    selectedImage
+                                      ? URL.createObjectURL(selectedImage)
+                                      : defaultImageUrl
+                                  } // Use selected image or default
+                                  style={{ width: "300px", height: "200px" }}
+                                  alt="Preview"
+                                />
+                                  }
+                                  
+                                
                                   <div className="">
 
 
@@ -185,6 +218,7 @@ useEffect(() => {
                             accept="text"
                             placeholder="Enter product Name"
                             required
+                            defaultValue={orderItem?.name}
                             onChange={(e) => {
                               setTemplateValue((prev) => ({
                                 ...prev,
@@ -205,6 +239,8 @@ useEffect(() => {
                           <div className="basic-form  ">
                             <form onSubmit={(e) => e.preventDefault()}>
                               <textarea
+                                                          defaultValue={orderItem?.description}
+
                                 className="form-txtarea form-control"
                                 rows="4"
                                 id="comment"
@@ -228,6 +264,8 @@ useEffect(() => {
 
                             <input
                               type="text"
+                              defaultValue={orderItem?.price}
+
                               className="form-control"
                               onChange={(e) => {
                                 setTemplateValue((prev) => ({
@@ -245,6 +283,7 @@ useEffect(() => {
                           <label htmlFor="state">Category's</label>
                           <Form.Control
                             as="select"
+                            
                             onChange={(e) => {
                               setTemplateValue((prev) => ({
                                 ...prev,
@@ -273,7 +312,7 @@ useEffect(() => {
                             className="btn btn-primary btn-lg btn-block"
                             onClick={addMyMenuFunc}
                           >
-                            Save Product
+                            Update Product
                           </button>
                         </div>
                       </div>
@@ -290,4 +329,4 @@ useEffect(() => {
   );
 };
 
-export default Checkout;
+export default CheckoutCheck;

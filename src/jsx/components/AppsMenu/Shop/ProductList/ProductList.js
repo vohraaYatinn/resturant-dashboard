@@ -183,7 +183,7 @@ return(
                         <div className="col-md-7 col-xxl-12">
                           <div className="new-arrival-content position-relative">
                             <h4>
-                              <Link to="/ecom-checkout">
+                              <Link to={`/ecom-checkout/${item.id}`}>
                                {item.name}
                               </Link>
                             </h4>

@@ -461,7 +461,7 @@ const Widget = () => {
                       <div className="timeline-panel">
                         <div className="media me-2 media-danger">KG</div>
                         <div className="media-body">
-                          <h5 className="mb-1">Resport created successfully</h5>
+                          <h5 className="mb-1">Report created successfully</h5>
                           <small className="d-block">
                             29 July 2022 - 02:26 PM
                           </small>
@@ -634,7 +634,7 @@ const Widget = () => {
                         <div className="media me-2 media-info">KG</div>
                         <div className="media-body">
                           <h5 className="mb-1">
-                            Resport created successfully{" "}
+                            Report created successfully{" "}
                             <span className="badge badge-warning">Warning</span>
                           </h5>
                           <small className="d-block">
@@ -796,7 +796,7 @@ const Widget = () => {
                         <div className="media me-2 media-danger">KG</div>
                         <div className="media-body">
                           <h5 className="mb-1">
-                            Resport created successfully{" "}
+                            Report created successfully{" "}
                             <span className="badge light badge-success">
                               Success
                             </span>
@@ -3101,7 +3101,7 @@ const Widget = () => {
                       <div className="timeline-panel">
                         <div className="media me-2 media-info">KG</div>
                         <div className="media-body">
-                          <h5 className="mb-1">Resport created successfully</h5>
+                          <h5 className="mb-1">Report created successfully</h5>
                           <small className="d-block">
                             29 July 2022 - 02:26 PM
                           </small>
@@ -3273,7 +3273,7 @@ const Widget = () => {
                           <img  width="50" alt="" src={avatar2} />
                         </div>
                         <div className="media-body">
-                          <h5 className="mb-1">Resport created successfully</h5>
+                          <h5 className="mb-1">Report created successfully</h5>
                           <small className="d-block">
                             29 July 2022 - 02:26 PM
                           </small>

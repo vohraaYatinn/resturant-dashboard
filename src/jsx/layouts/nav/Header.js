@@ -124,13 +124,13 @@ const Header = ({ onNote }) => {
 							<Dropdown.Menu align="end" className="mt-2 dropdown-menu dropdown-menu-end">
 								<div className="widget-media dz-scroll p-3 height380">
 									<ul className="timeline">
-										{orderList?.map((item)=>{
+										{/* {orderList?.map((item)=>{
 											return(
 												<NotificationBlog classChange='media-info'/>
 
 											)
 
-										})}
+										})} */}
 										{/* <NotificationBlog classChange='media-success' />
 										<NotificationBlog classChange='media-danger' />
 										<NotificationBlog classChange='media-info' /> */}

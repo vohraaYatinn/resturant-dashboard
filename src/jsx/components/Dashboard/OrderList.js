@@ -1,14 +1,14 @@
 import React, { useEffect, useRef, useState, } from 'react';
 import { Link } from 'react-router-dom';
-import { Modal, Dropdown } from 'react-bootstrap';
+import { Modal, Dropdown, Button } from 'react-bootstrap';
 import Select from 'react-select';
 import { IMAGES } from '../../constant/theme';
 
 import { SVGICON } from '../../constant/theme';
 import useAxios from '../../../network/useAxios';
-import { ChangeOrderStatus, getOrderList } from '../../../urls/urls';
+import { ChangeOrderStatus, getOrderList, orderMarkedAttended } from '../../../urls/urls';
 import { ToastContainer, toast } from 'react-toastify';
-import { formattedDate, getDataUsingStatus, getStatusBadgeClass } from '../../commonFunctions';
+import { formattedDate, getDataUsingStatus, getStatusBadgeClass} from '../../commonFunctions';
 import { test_url_images } from '../../../config/environment';
 
 // import { io } from "socket.io-client";
@@ -31,13 +31,6 @@ const notify = (message, status) => {
 }
 
 const OrderList = () => {
-
-
-
-
-
-
-
 
 
     const [orderList, setOrderList] = useState([])
@@ -76,33 +69,53 @@ const OrderList = () => {
             }
             
         }, [notify2]);
-
-    useEffect(() => {
-        const ws = new WebSocket('ws://180.188.226.29:8000/ws/orders/');
-        setSocket(ws);
-
-        // Handle incoming messages
-        ws.onmessage = (event) => {
-          const data = JSON.parse(event.data);
+        useEffect(() => {
+            let ws;
+            let reconnectInterval;
           
-
-          setMessage(data);
-        };
-    
-        // Handle WebSocket connection close
-        ws.onclose = () => {
-          console.log('WebSocket connection closed');
-        };
-    
-        // Handle errors
-        ws.onerror = (error) => {
-          console.error('WebSocket error:', error);
-        };
-    
-        return () => {
-          ws.close();
-        };
-      }, []);
+            const connectWebSocket = () => {
+              ws = new WebSocket('ws://180.188.226.29:8000/ws/orders/');
+              setSocket(ws);
+          
+              // Handle incoming messages
+              ws.onmessage = (event) => {
+                const data = JSON.parse(event.data);
+                setMessage(data);
+              };
+          
+              // Handle WebSocket connection open
+              ws.onopen = () => {
+                console.log('WebSocket connection established.');
+                if (reconnectInterval) {
+                  clearInterval(reconnectInterval);
+                  reconnectInterval = null; // Clear any existing reconnection attempts
+                }
+              };
+          
+              // Handle WebSocket connection close
+              ws.onclose = () => {
+                console.log('WebSocket connection closed. Attempting to reconnect...');
+                if (!reconnectInterval) {
+                  reconnectInterval = setInterval(() => {
+                    console.log('Reconnecting...');
+                    connectWebSocket(); // Attempt to reconnect
+                  }, 5000); // Retry every 5 seconds
+                }
+              };
+          
+              // Handle errors
+              ws.onerror = (error) => {
+                console.error('WebSocket error:', error);
+              };
+            };
+          
+            connectWebSocket();
+          
+            return () => {
+              if (ws) ws.close(); // Close WebSocket on cleanup
+              if (reconnectInterval) clearInterval(reconnectInterval); // Clear the reconnection interval
+            };
+          }, []);
 
 
     const [unchecked, setUnChecked] = useState(true);
@@ -161,6 +174,12 @@ const OrderList = () => {
         changeOrderStatusLoading,
         changeOrderStatusFetch,
     ] = useAxios();
+    const [
+        orderMarkedAttendedResponse,
+        orderMarkedAttendedError,
+        orderMarkedAttendedLoading,
+        orderMarkedAttendedFetch,
+    ] = useAxios();
 
     const fetchOrderData = () => {
         getOrderListFetch(getOrderList({day:filter}))
@@ -168,14 +187,42 @@ const OrderList = () => {
     const changeOrderStatusFunc = (status, uuid) => {
         changeOrderStatusFetch(ChangeOrderStatus({uuid:uuid, status:status}))
     }
+    const OrderMarkedAttendedFunc = (uuid) => {
+        orderMarkedAttendedFetch(orderMarkedAttended({uuid:uuid}))
+    }
     useEffect(() => {
 
         fetchOrderData()
 
     }, [filter, message])
-
-
+    useEffect(() => {
+        const intervalId = setInterval(() => {
+          fetchOrderData();
+        }, 200000);
       
+        // Cleanup function to clear the interval
+        return () => clearInterval(intervalId);
+      }, []);
+
+      const [isAnyUnattendedOrder, setAnyUnAttendedOrder]= useState(false)
+      useEffect(()=>{
+        let intervalId;
+      
+        if (isAnyUnattendedOrder) {
+          // Start the interval when isAnyUnattendedOrder is true
+          intervalId = setInterval(() => {
+            if (buttonRef.current) {
+              buttonRef.current.click();
+            }
+          }, 2000); // Click every second
+        } else {
+          // Clear the interval when isAnyUnattendedOrder becomes false
+          clearInterval(intervalId);
+        }
+      
+        // Cleanup function to clear the interval when the component unmounts
+        return () => clearInterval(intervalId);
+      },[isAnyUnattendedOrder])
     useEffect(() => {
         if (getOrderListError?.response) {
             notify(getOrderListError?.response?.data, "error")
@@ -188,6 +235,9 @@ const OrderList = () => {
             }
             setOrderList(getOrderListResponse?.data)
             setTableBlog(getOrderListResponse?.data)
+            const hasUnattendedOrders = getOrderListResponse?.data.some(order => order.is_attended === false);
+            setAnyUnAttendedOrder(hasUnattendedOrders)
+            console.log(getOrderListResponse?.data)
           
             
         }
@@ -198,11 +248,22 @@ const OrderList = () => {
         }
     }, [changeOrderStatusError])
     useEffect(() => {
+        if (orderMarkedAttendedError?.response) {
+            notify(orderMarkedAttendedError?.response?.data, "error")
+        }
+    }, [orderMarkedAttendedError])
+    useEffect(() => {
         if (changeOrderStatusResponse?.result == "success") {
             notify(changeOrderStatusResponse?.message, "success")
             fetchOrderData()
         }
     }, [changeOrderStatusResponse])
+    useEffect(() => {
+        if (orderMarkedAttendedResponse?.result == "success") {
+            notify(orderMarkedAttendedResponse?.message, "success")
+            fetchOrderData()
+        }
+    }, [orderMarkedAttendedResponse])
 
 
 
@@ -296,13 +357,16 @@ const OrderList = () => {
                                                         <th>Location</th>
                                                         <th>Amount</th>
                                                         <th>Status</th>
+                                                        <th>Attended</th>
                                                         <th>Action</th>
                                                         <th></th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
                                                     {tableBlog.map((item, index) => (
-                                                        <tr key={index}>
+                                                        <tr key={index} style={{
+                                                            background:!item?.is_attended && "#dbcc5a"
+                                                        }}>
                                                             <td className="sorting_25">
                                                                 <div className="form-check custom-checkbox">
                                                                     <input type="checkbox" className="form-check-input"
@@ -322,7 +386,15 @@ const OrderList = () => {
                                                                 <span className={`badge badge-rounded badge-lg badge-outline ${getStatusBadgeClass(item.status)}`}>
                                                                     {getDataUsingStatus(item.status)}
                                                                 </span>
-                                                            </td>                                                      
+                                                            </td>       
+                                                            <td>
+                                                                {!item?.is_attended &&
+                                                            <Button variant="primary" onClick={()=>{
+                                                                OrderMarkedAttendedFunc(item?.id)
+                                                            }}>Mark as Attended</Button>
+                                                        }
+                                                               
+                                                                </td>                                               
                                                                       <td style={{
                                                                         cursor:"pointer"
                                                                       }}>
@@ -455,8 +527,12 @@ const OrderList = () => {
                                 <li><h6>€ {selectedOrder?.total_amount}</h6></li>
                             </ul>
                             <ul className="d-flex align-items-center justify-content-between">
+                                <li><span>Customer Details</span></li>
+                                <li><h6><b>{selectedOrder?.user?.full_name}</b><br />{selectedOrder?.user?.phone_number}</h6></li>
+                            </ul>
+                            <ul className="d-flex align-items-center justify-content-between">
                                 <li><span>Full Address</span></li>
-                                <li><h6><b>{selectedOrder?.address?.street}</b><br />{selectedOrder?.address?.city}</h6></li>
+                                <li><h6>{selectedOrder?.address?.street}<br />{selectedOrder?.address?.city}<br/>{selectedOrder?.address?.zip_code}</h6></li>
                             </ul>
                            
                         </div>
