@@ -206,8 +206,8 @@ const iconBoxcard = [
   return (
     <>
       <div className="container mh-auto">
-        <div className="row">
-        <div className="col-xl-3 col-sm-1" >
+        <div className="row check-rest-item-1">
+        <div className="col-xl-3 col-md-6 col-sm-1 hokahoi" >
               <div className="card">
                 <div className="card-body d-flex justify-content-between">
                   <div className="card-menu">
@@ -220,7 +220,7 @@ const iconBoxcard = [
                 </div>
               </div>
             </div>
-            <div className="col-xl-3 col-sm-1" >
+            <div className="col-xl-3 col-md-6 col-sm-1 hokahoi" >
               <div className="card">
                 <div className="card-body d-flex justify-content-between">
                   <div className="card-menu">
@@ -233,7 +233,7 @@ const iconBoxcard = [
                 </div>
               </div>
             </div>
-            <div className="col-xl-3 col-sm-1" >
+            <div className="col-xl-3 col-md-6 col-sm-1 hokahoi" >
               <div className="card">
                 <div className="card-body d-flex justify-content-between">
                   <div className="card-menu">
@@ -246,7 +246,7 @@ const iconBoxcard = [
                 </div>
               </div>
             </div>
-          <div className="col-xl-3 col-sm-1">
+          <div className="col-xl-3 col-md-6 col-sm-1 hokahoi">
             <div className="card">
               <div className="card-body d-flex justify-content-between">
                 <div className="card-menu">
