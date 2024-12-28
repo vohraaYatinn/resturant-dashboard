@@ -24,6 +24,7 @@ const notify = (message, status) => {
         toast.error(message);
 
     }
+    
     else {
         toast.success(message);
 
@@ -35,6 +36,9 @@ const OrderList = () => {
 
     const [orderList, setOrderList] = useState([])
     const [filter, setFiler] = useState(options[0])
+    const today = new Date().toISOString().split('T')[0];
+
+    const [date, setDate] = useState(today)
     const [selectedOrder, setSelectedOrder] = useState({})
     const [tableBlog, setTableBlog] = useState(orderList);
     const [addActive, setActive] = useState('All');
@@ -156,6 +160,7 @@ const OrderList = () => {
         }
     }
     const handleChange = (selectedOption) => {
+        setDate("")
         setFiler(selectedOption);
       };
     
@@ -182,7 +187,7 @@ const OrderList = () => {
     ] = useAxios();
 
     const fetchOrderData = () => {
-        getOrderListFetch(getOrderList({day:filter}))
+        getOrderListFetch(getOrderList({day:filter, date:date}))
     }
     const changeOrderStatusFunc = (status, uuid) => {
         changeOrderStatusFetch(ChangeOrderStatus({uuid:uuid, status:status}))
@@ -190,11 +195,22 @@ const OrderList = () => {
     const OrderMarkedAttendedFunc = (uuid) => {
         orderMarkedAttendedFetch(orderMarkedAttended({uuid:uuid}))
     }
+    const [selectedDate, setSelectedDate] = useState('');
+
+
+    const handleDateChange = (event) => {
+        setFiler(options[0])
+
+      setSelectedDate(event.target.value); // Update state with the selected date
+      console.log('Selected Date:', event.target.value); // Optional: Log the selected date
+      setDate(event.target.value)
+    };
+  
     useEffect(() => {
 
         fetchOrderData()
 
-    }, [filter, message])
+    }, [filter, message, date])
     useEffect(() => {
         const intervalId = setInterval(() => {
           fetchOrderData();
@@ -314,7 +330,11 @@ const OrderList = () => {
                         <Link to={"#"} className={`nav-link ${addActive === 'pending' ? 'active' : ''}`} >Pendings</Link>
                     </li>
                 </ul>
-                <div className='d-flex align-items-center'>
+           
+            </div>
+            <div className="d-flex justify-content-between mb-4 flex-wrap">
+            <div className='d-flex align-items-center row'>
+        <div className='col-lg-6 mt-2 col-md-4 col-sm-12'>
                 <button className="btn btn-primary btn-lg btn-block" style={{
                     marginRight:"2rem"
                 }}
@@ -323,16 +343,32 @@ const OrderList = () => {
                 >
                   <i className="fa fa-bell-o"></i> Turn On Notification
                 </button>
+                </div>
+                <div className='col-lg-3 mt-2 col-md-4 col-sm-12'>
+
                     <Select
+                        
                         options={options}
-                        className="custom-react-drop-btn"
+                        className="custom-react-drop-btn custom-react-check"
                         value={filter}
                         isSearchable={false}
                         onChange={handleChange}
                     />
+                    </div>
+
+<div className='col-lg-3 mt-2 col-md-4 col-sm-12'>
+
+                    <input type='date'
+                    className='date-check-input-get'
+                    value={selectedDate}
+        onChange={handleDateChange} 
+                    />
+                    </div>
 
                 </div>
+           
             </div>
+            
             <div className="row">
                 <div className="col-xl-12">
                     <div className='tab-content'>
