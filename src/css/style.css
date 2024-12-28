@@ -35413,3 +35413,16 @@ html[dir="rtl"] [direction="rtl"][data-sidebar-style="compact"]:not([data-layout
   color: var(--primary) !important;
   width: 100%;
 }
+.custom-react-check input{
+  min-width: 10rem;
+}
+.date-check-input-get{
+  border: 1px solid;
+  height: 2rem;
+  background-color: #fff;
+  border-radius: .75rem;
+  border-color: var(--primary) !important;
+  padding: 1.2rem;
+  color: var(--primary) !important;
+  width: 100%;
+}
